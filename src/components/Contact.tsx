@@ -272,7 +272,8 @@ export function Contact() {
                     required
                     value={formData.service}
                     onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                    className="mt-2 flex h-9 w-full items-center justify-between gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm transition-colors focus:border-[var(--turquoise)] focus:outline-none focus:ring-2 focus:ring-[var(--turquoise)]/20"
+                    className="mt-2 flex h-9 w-full items-center justify-between gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 transition-colors focus:border-[var(--turquoise)] focus:outline-none focus:ring-2 focus:ring-[var(--turquoise)]/20"
+                    style={{ backgroundColor: 'white', color: '#111827' }}
                   >
                     <option value="">Выберите услугу</option>
                     <option value="Лечение и терапия">Лечение и терапия</option>
@@ -321,7 +322,8 @@ export function Contact() {
                   name="contact_method"
                   value={formData.contactMethod}
                   onChange={(e) => setFormData({ ...formData, contactMethod: e.target.value })}
-                  className="mt-2 flex h-9 w-full items-center justify-between gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm transition-colors focus:border-[var(--turquoise)] focus:outline-none focus:ring-2 focus:ring-[var(--turquoise)]/20"
+                  className="mt-2 flex h-9 w-full items-center justify-between gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 transition-colors focus:border-[var(--turquoise)] focus:outline-none focus:ring-2 focus:ring-[var(--turquoise)]/20"
+                  style={{ backgroundColor: 'white', color: '#111827' }}
                 >
                   <option value="">Выберите вариант</option>
                   <option value="Заказать звонок">Заказать звонок</option>
