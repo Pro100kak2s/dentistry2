@@ -8,7 +8,6 @@ import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { Calendar } from './ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useState } from 'react';
 import type React from 'react';
 import { format, startOfToday } from 'date-fns';
@@ -266,25 +265,24 @@ export function Contact() {
               {/* Service & Date */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <Label>Интересующая услуга *</Label>
-                  <Select
-                    value={formData.service}
-                    onValueChange={(value) => setFormData({ ...formData, service: value })}
+                  <Label htmlFor="service">Интересующая услуга *</Label>
+                  <select
+                    id="service"
+                    name="service"
                     required
+                    value={formData.service}
+                    onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                    className="mt-2 flex h-9 w-full items-center justify-between gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 transition-colors focus:border-[var(--turquoise)] focus:outline-none focus:ring-2 focus:ring-[var(--turquoise)]/20"
+                    style={{ backgroundColor: 'white', color: '#111827' }}
                   >
-                    <SelectTrigger className="mt-2 rounded-xl border-gray-200 bg-white text-gray-900">
-                      <SelectValue placeholder="Выберите услугу" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white">
-                      <SelectItem value="Лечение и терапия">Лечение и терапия</SelectItem>
-                      <SelectItem value="Эстетическая стоматология">Эстетическая стоматология</SelectItem>
-                      <SelectItem value="Хирургическая стоматология">Хирургическая стоматология</SelectItem>
-                      <SelectItem value="Имплантация зубов">Имплантация зубов</SelectItem>
-                      <SelectItem value="Пародонтология">Пародонтология</SelectItem>
-                      <SelectItem value="Протезирование зубов">Протезирование зубов</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <input type="hidden" name="service" value={formData.service} />
+                    <option value="">Выберите услугу</option>
+                    <option value="Лечение и терапия">Лечение и терапия</option>
+                    <option value="Эстетическая стоматология">Эстетическая стоматология</option>
+                    <option value="Хирургическая стоматология">Хирургическая стоматология</option>
+                    <option value="Имплантация зубов">Имплантация зубов</option>
+                    <option value="Пародонтология">Пародонтология</option>
+                    <option value="Протезирование зубов">Протезирование зубов</option>
+                  </select>
                 </div>
                 <div>
                   <Label>Дата записи *</Label>
@@ -318,20 +316,19 @@ export function Contact() {
 
               {/* Preferred Contact Method */}
               <div>
-                <Label>Выберите удобный способ связи *</Label>
-                <Select
+                <Label htmlFor="contact_method">Выберите удобный способ связи *</Label>
+                <select
+                  id="contact_method"
+                  name="contact_method"
                   value={formData.contactMethod}
-                  onValueChange={(value) => setFormData({ ...formData, contactMethod: value })}
+                  onChange={(e) => setFormData({ ...formData, contactMethod: e.target.value })}
+                  className="mt-2 flex h-9 w-full items-center justify-between gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 transition-colors focus:border-[var(--turquoise)] focus:outline-none focus:ring-2 focus:ring-[var(--turquoise)]/20"
+                  style={{ backgroundColor: 'white', color: '#111827' }}
                 >
-                  <SelectTrigger className="mt-2 rounded-xl border-gray-200 bg-white text-gray-900">
-                    <SelectValue placeholder="Выберите вариант" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white">
-                    <SelectItem value="Заказать звонок">Заказать звонок</SelectItem>
-                    <SelectItem value="Написать в WhatsApp">Написать в WhatsApp</SelectItem>
-                  </SelectContent>
-                </Select>
-                <input type="hidden" name="contact_method" value={formData.contactMethod} />
+                  <option value="">Выберите вариант</option>
+                  <option value="Заказать звонок">Заказать звонок</option>
+                  <option value="Написать в WhatsApp">Написать в WhatsApp</option>
+                </select>
               </div>
 
               {/* Message */}
