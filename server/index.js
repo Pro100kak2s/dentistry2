@@ -14,12 +14,18 @@ app.use(express.urlencoded({ extended: true }));
 // Configure email transporter for Mail.ru/Inbox.ru
 const transporter = nodemailer.createTransport({
   host: 'smtp.mail.ru',
-  port: 465,
-  secure: true, // use SSL
+  port: 587,
+  secure: false, // use TLS
   auth: {
     user: process.env.EMAIL_USER, // Your email: iamyapi@inbox.ru
     pass: process.env.EMAIL_PASS  // Your regular email password
-  }
+  },
+  tls: {
+    rejectUnauthorized: false
+  },
+  connectionTimeout: 30000, // 30 seconds
+  greetingTimeout: 30000,
+  socketTimeout: 30000
 });
 
 // Health check endpoint
