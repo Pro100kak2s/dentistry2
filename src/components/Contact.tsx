@@ -13,6 +13,7 @@ import type React from 'react';
 import { format, startOfToday } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 const contactInfo = [
   {
@@ -50,7 +51,12 @@ export function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/contact';
+  
+  // EmailJS configuration - замените на ваши реальные значения после настройки
+  const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID';
+  const EMAILJS_TEMPLATE_ID_CLINIC = import.meta.env.VITE_EMAILJS_TEMPLATE_ID_CLINIC || 'YOUR_TEMPLATE_ID_CLINIC';
+  const EMAILJS_TEMPLATE_ID_CLIENT = import.meta.env.VITE_EMAILJS_TEMPLATE_ID_CLIENT || 'YOUR_TEMPLATE_ID_CLIENT';
+  const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
 
   const handlePhoneChange = (e: any) => {
     const input = e.target.value;
@@ -98,47 +104,62 @@ export function Contact() {
     setIsSubmitting(true);
     setSubmitSuccess(false);
 
-    const formElement = e.currentTarget;
-    const formData = new FormData(formElement);
-    
-    // Convert FormData to JSON object
-    const data: Record<string, any> = {};
-    formData.forEach((value, key) => {
-      data[key] = value;
-    });
-
     try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-      });
+      // Initialize EmailJS
+      emailjs.init(EMAILJS_PUBLIC_KEY);
 
-      const result = await response.json();
+      // 1. Send email to clinic
+      const clinicTemplateParams = {
+        to_email: 'iamyapi@inbox.ru',
+        client_name: formData.name,
+        client_email: formData.email,
+        client_phone: formData.phone,
+        service: formData.service,
+        date: date ? format(date, 'd MMMM yyyy', { locale: ru }) : '',
+        contact_method: formData.contactMethod,
+        message: formData.message || '-',
+      };
 
-      if (result.success) {
-        setSubmitSuccess(true);
-        
-        // Clear form after 3 seconds
-        setTimeout(() => {
-          setFormData({
-            name: '',
-            email: '',
-            phone: '+7 (___) ___-__-__',
-            service: '',
-            contactMethod: '',
-            message: '',
-          });
-          setDate(undefined);
-        }, 3000);
-      } else {
-        alert('Ошибка отправки. Попробуйте позже.');
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID_CLINIC,
+        clinicTemplateParams
+      );
+
+      // 2. Send confirmation email to client
+      if (formData.email) {
+        const clientTemplateParams = {
+          to_email: formData.email,
+          client_name: formData.name,
+          service: formData.service,
+          date: date ? format(date, 'd MMMM yyyy', { locale: ru }) : '',
+          contact_method: formData.contactMethod,
+        };
+
+        await emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID_CLIENT,
+          clientTemplateParams
+        );
       }
+
+      setSubmitSuccess(true);
+      
+      // Clear form after 3 seconds
+      setTimeout(() => {
+        setFormData({
+          name: '',
+          email: '',
+          phone: '+7 (___) ___-__-__',
+          service: '',
+          contactMethod: '',
+          message: '',
+        });
+        setDate(undefined);
+      }, 3000);
     } catch (error) {
-      console.error('Submit error:', error);
-      alert('Ошибка отправки. Проверьте, что сервер запущен.');
+      console.error('EmailJS error:', error);
+      alert('Ошибка отправки. Попробуйте позже.');
     } finally {
       setIsSubmitting(false);
     }
